@@ -167,8 +167,78 @@ pas.plugins.imio 2.0
 ```
 
 </textarea></section>
-<section data-markdown  data-auto-animate data-background-image="medias/background-presentation-imio.png" data-background-size="contain"><textarea data-template>
+<section data-markdown  data-background-image="medias/background-presentation-imio.png" data-background-size="contain"><textarea data-template>
 
+### Build on a Docker image <!-- .element: style="color:white; position: relative; top: -3em;" -->
+
+- A new Docker image is created on each commit on buildout repository
+- This image is pushed to our own staging registry
+- Build failled if a package is not pinned
+
+</textarea></section>
+<section data-markdown  data-background-image="medias/background-presentation-imio.png" data-background-size="contain"><textarea data-template>
+
+### Test image <!-- .element: style="color:white; position: relative; top: -3.5em;" -->
+- With pytest and docker-compose
+- Test if "Listening at: http://0.0.0.0:8080" is in logs
+- Test with restapi if our "policy" is installed
+
+</textarea></section>
+<section data-markdown  data-background-image="medias/background-presentation-imio.png" data-background-size="contain"><textarea data-template>
+
+### Code example <!-- .element: style="color:white; position: relative; top: -1em;" -->
+```python
+def test_start_instance(docker_compose):
+    project = project_from_options(path.dirname(__file__), options)
+    cmd = TopLevelCommand(project)
+    instance = [serv for serv in cmd.project.services if serv.name == "instance"][0]
+    container_name = f"{instance.project}_{instance.name}_1"
+    client = docker.from_env()
+    container = client.containers.get(container_name)
+    is_plone_ready = False
+    timeout = time.time() + 60
+    while not is_plone_ready:
+        time.sleep(1)
+        if container not in client.containers.list():
+            print("Instance container is down, it must restart")
+            break
+        bytes_logs = container.logs()
+        logs = bytes_logs.decode(encoding="utf-8", errors="strict")
+        if "Listening at: http://0.0.0.0:8080" in logs:
+            is_plone_ready = True
+            print("Instance started !")
+            continue
+        if time.time() > timeout:
+            print("Timeout")
+            break
+    assert is_plone_ready
+```
+</textarea></section>
+<section data-markdown  data-auto-animate data-background-image="medias/background-presentation-imio.png" data-background-size="contain"><textarea data-template>
+### Code example <!-- .element: style="color:white; position: relative; top: -1em;" -->
+
+```python
+def test_policy_installed(docker_compose):
+    project = project_from_options(path.dirname(__file__), options)
+    cmd = TopLevelCommand(project)
+    instance = [serv for serv in cmd.project.services if serv.name == "instance"][0]
+    container_name = f"{instance.project}_{instance.name}_1"
+    client = docker.from_env()
+    container = client.containers.get(container_name)
+    while get_health(container) != "healthy":
+        time.sleep(1)
+    installed_package_id = "imio.smartweb.policy"
+    package_info = requests.get(
+        f"http://localhost:8080/Plone/@addons/{installed_package_id}",
+        headers={"Accept": "application/json"},
+        auth=("admin", "admin"),
+    ).json()
+    assert package_info.get(
+        "is_installed"
+    ), f"package {installed_package_id} is not installed"
+```
+</textarea></section>
+<section data-markdown  data-auto-animate data-background-image="medias/background-presentation-imio.png" data-background-size="contain"><textarea data-template>
 
 ## What we done
 
@@ -309,14 +379,6 @@ stage('Test') {
     }
 }
 ```
-
-</textarea></section>
-<section data-markdown  data-background-image="medias/background-presentation-imio.png" data-background-size="contain"><textarea data-template>
-
-### Test image
-- With pytest and docker-compose
-- Test if "Listening at: http://0.0.0.0:8080" is in logs
-- Test with restapi if our "policy" is installed
 
 </textarea></section>
 <section data-markdown  data-background-image="medias/background-presentation-imio.png" data-background-size="contain"><textarea data-template>
