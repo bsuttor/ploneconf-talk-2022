@@ -71,35 +71,35 @@ So we begin to think as DevOps enterprise and we start to create process to upda
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
 
-### What we do not want anymore
+### What we do not want anymore <!-- .element: style="color:white; position: relative; top: -2em;" -->
 
 - Devs who made bugfix directly on production
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/9w0XCa6mMUQ" title="YouTube video player" frameborder="0" allow="accelerometer;  ; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="medias/quickfix-prod.webm" title="YouTube video player" frameborder="0" allow="accelerometer;  ; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 [comment]: # (!!! data-auto-animate data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
 ### We want small and frequent releases <!-- .element: style="color:white; position: relative; top: -0.5em;" -->
 
-- Fewer changes in the source code  <!-- .element: class="fragment" data-fragment-index="1" -->
-- Changes are still fresh in mind <!-- .element: class="fragment" data-fragment-index="2" -->
-- If there is a bug, it’s easiest to find it <!-- .element: class="fragment" data-fragment-index="3" -->
+- Fewer changes in the source code
+- Changes are still fresh in mind
+- If there is a bug, it’s easiest to find it
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/0Ms0ebQ5cp8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> <!-- .element: class="fragment" data-fragment-index="3" -->
+<iframe width="560" height="315" src="medias/donotreadthedoc.webm" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-- help junior dev to make release <!-- .element: class="fragment" data-fragment-index="4" -->
+- help junior dev to make release
 
-[comment]: # (!!! data-auto-animate data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
+[comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
 ### We want to use same tools than dev used
 
-- Easy for dev to used it  <!-- .element: class="fragment" data-fragment-index="1" -->
-- Make the same with buildout than eggs <!-- .element: class="fragment" data-fragment-index="2" -->
+- Easy for dev to used it
+- Make the same with buildout than eggs
 
--> We decided to use zest.releaser for releasing our buildouts <!-- .element: class="fragment" data-fragment-index="3" -->
+-> We decided to use zest.releaser for releasing our buildouts
 
-[comment]: # (!!! data-auto-animate data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
+[comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
 ## Table of contents <!-- .element: style="color:white; position: relative; top: -2em;" -->
 
@@ -128,8 +128,6 @@ And it's all, we can now make "fullrelease" of our buildout.
 We have a clear changelog of what is done in a new release
 
 ```markdown
-imio.smartweb.policy 1.0.7
-
     Adapt SolR config to use tika for file indexing
     [mpeeters]
 
@@ -216,13 +214,6 @@ def test_policy_installed(docker_compose):
 ```
 [comment]: # (!!!  data-auto-animate data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
-## What we decided
-
-3 envs dev/staging/production
-
-[comment]: # (!!!  data-auto-animate data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
-
-
 ## Table of contents <!-- .element: style="color:white; position: relative; top: -2em;" -->
 
 1. Introduction
@@ -237,7 +228,7 @@ def test_policy_installed(docker_compose):
 ### Environments  <!-- .element: style="color:white; position: relative; top: -1em;" -->
 #### Devs
 
-Use to local dev, with buildout, pip, mr.developer ...
+Use to local dev with buildout, pip, mr.developer ...
 
 #### Staging
 
@@ -280,7 +271,7 @@ So a human action is required to deploy to production and staging is automatical
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
 
-## How we do that : Jenkins
+## How we do that: Jenkins
 
 We used Jenkins to scan all our buildout repo on our organization on Github
 
@@ -435,6 +426,5 @@ Question(s)
 ![Twitter](https://skillicons.dev/icons?i=twitter) <!-- .element: style="position: relative; top: 0.7em; padding-top: 1px; padding-right: 1em; padding-left: 1em;" --> [bensuttor](https://twitter.com/bensuttor)
 
 ![Github](https://skillicons.dev/icons?i=github) <!-- .element: style="position: relative; top: 0.7em; padding-right: 1em; padding-left: 1em;" --> [bsuttor](https://github.com/bsuttor)
-
 
 [comment]: # (data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
