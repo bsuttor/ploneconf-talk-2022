@@ -41,8 +41,9 @@ I use markdown-slides to generated it: https://gitlab.com/da_doomer/markdown-sli
 1. **Introduction**
 2. Buildout and Docker
 3. Environments
-4. CI/CD - Jenkins
-5. Demo
+4. CI/CD - Jenkins - Rundeck
+5. Puppet
+6. Demo
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
@@ -63,7 +64,7 @@ So we begin to think as DevOps enterprise and we start to create process to upda
 
 ### What we want to improve
 - Avoid human errors
-- Remove ssh access to all your dev
+- Remove ssh access to maximum of people
 ```bash
 # rm -rf /
 ```
@@ -80,22 +81,19 @@ So we begin to think as DevOps enterprise and we start to create process to upda
 
 [comment]: # (!!! data-auto-animate data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
-### We want small and frequent releases <!-- .element: style="color:white; position: relative; top: -0.5em;" -->
+### We want small and frequent releases <!-- .element: style="color:white; position: relative; top: -3em;" -->
 
 - Fewer changes in the source code
 - Changes are still fresh in mind
 - If there is a bug, it’s easiest to find it
-
-<iframe width="560" height="315" src="medias/donotreadthedoc.webm" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-- help junior dev to make release
+- Junior dev should make release
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
-### We want to use same tools than dev used
+### We want to use same tools than dev for CI
 
-- Easy for dev to used it
-- Make the same with buildout than eggs
+- Buildout are on repository in Github
+- We should used it to deploy new changes
 
 -> We decided to use zest.releaser for releasing our buildouts
 
@@ -106,8 +104,9 @@ So we begin to think as DevOps enterprise and we start to create process to upda
 1. Introduction
 2. **Buildout and Docker**
 3. Environments
-4. CI/CD - Jenkins
-5. Demo
+4. CI/CD - Jenkins - Rundeck
+5. Puppet
+6. Demo
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
@@ -149,6 +148,7 @@ pas.plugins.imio 2.0
 
 ### Build on a Docker image <!-- .element: style="color:white; position: relative; top: -3em;" -->
 
+- Good way to package our code base
 - A new Docker image is created on each commit on buildout repository
 - This image is pushed to our own Docker registry
 - Build failled if a package is not pinned
@@ -219,24 +219,25 @@ def test_policy_installed(docker_compose):
 1. Introduction
 2. Buildout and Docker
 3. **Environments**
-4. CI/CD - Jenkins
-5. Demo
+4. CI/CD - Jenkins - Rundeck
+5. Puppet
+6. Demo
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
 
-### Environments  <!-- .element: style="color:white; position: relative; top: -1em;" -->
+### Environments <!-- .element: style="color:white; position: relative; top: -0em;" -->
 #### Devs
 
-Use to local dev with buildout, pip, mr.developer ...
+Use to local dev with buildout, pip, mr.developer, direnv, pre-commit ...
 
 #### Staging
 
-New docker image is createad and deploy to staging instances at every commit in buildout repository.
+When change are detected, staging instances should be automaticaly updated
 
 #### Production
 
-Production instances are updated when a new tag is push
+Production instances should be updated with a human action
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
@@ -258,15 +259,14 @@ When a new tag is created, latest staging Docker image is copied to docker prod 
 So a human action is required to deploy to production and staging is automatically updated.
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
-
-
 ## Table of contents <!-- .element: style="color:white; position: relative; top: -2em;" -->
 
 1. Introduction
 2. Buildout and Docker
 3. Environments
-4. **CI/CD - Jenkins**
-5. Demo
+4. **CI/CD - Jenkins - Rundeck**
+5. Puppet
+6. Demo
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
@@ -346,9 +346,8 @@ stage('Deploy to staging') {
     agent any
     when {
         allOf {
-            branch "main"
             expression {
-                currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                currentBuild.result == 'SUCCESS'  || currentBuild.result == null
             }
             not {
                 changelog '.*\\[(ci)?\\-?\\s?skip\\-?\\s?(ci)?\\].*'
@@ -366,6 +365,14 @@ stage('Deploy to staging') {
     }
 }
 ```
+
+[comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
+
+### Rundeck
+
+- Avoid ssh access to your server
+- Used job defined to make precise actions
+- Restart instance one by one
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
@@ -394,12 +401,31 @@ stage('Deploy') {
 ### Pipeline with a new tag <!-- .element: style="color:white;" -->
 
 ![picture of Jenkins pipeline](medias/jenkins-pipeline-deploy.png)
+[comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
+
+## Table of contents <!-- .element: style="color:white; position: relative; top: -2em;" -->
+
+1. Introduction
+2. Buildout and Docker
+3. Environments
+4. CI/CD - Jenkins - Rundeck
+5. **Puppet**
+6. Demo
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
-Next step
+### Puppet
+Puppet used to configure our server, it's a tool to make infrastructure automation
+- create systemd files to start container (based on docker-compose)
+- create cron for backup, pack, ...
+- create Apache aliases
 
-Migration to Kubernetes with a Helm chart
+[comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
+
+
+All this process take a lot of iteration to get there,
+
+but we should now improve all of this by migration to Kubernetes with a Helm chart
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
@@ -409,8 +435,9 @@ Migration to Kubernetes with a Helm chart
 1. Introduction
 2. Buildout and Docker
 3. Environments
-4. CI/CD - Jenkins
-5. **Demo**
+4. CI/CD - Jenkins - Rundeck
+5. Puppet
+6. **Demo**
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
