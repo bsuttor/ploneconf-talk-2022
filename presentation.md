@@ -29,9 +29,9 @@
 
 ## About
 
-This presentation is avaiable on github: https://github.com/bsuttor/ploneconf-talk-2022
+This presentation is avaiable on Github: https://github.com/bsuttor/ploneconf-talk-2022
 
-I use markdown-slides to generated it: https://gitlab.com/da_doomer/markdown-slides
+I used markdown-slides to generate it: https://gitlab.com/da_doomer/markdown-slides
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
@@ -51,7 +51,7 @@ I use markdown-slides to generated it: https://gitlab.com/da_doomer/markdown-sli
 ## Introduction
 
 - Creation of 200 websites developped in Plone
-- Need process to update it
+- Need: process to update them
 - Start thinking as DevOps and SRE (Site Reliability Engineering)
 
 <!--
@@ -63,9 +63,9 @@ So we begin to think as DevOps enterprise and we start to create process to upda
 
 
 ### What we want to improve
-- Avoid human errors
-- Remove ssh access to maximum of people
-```bash
+- Avoid human errors by removing ssh access from maximum of people
+
+```md
 # rm -rf /
 ```
 
@@ -86,14 +86,13 @@ So we begin to think as DevOps enterprise and we start to create process to upda
 - Fewer changes in the source code
 - Changes are still fresh in mind
 - If there is a bug, it’s easiest to find it
-- Junior dev should make release
+- Junior dev might be able to make release
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
-
 ### We want to use same tools than dev for CI
 
-- Buildout are on repository in Github
-- We should used it to deploy new changes
+- Buildouts are on repository in Github
+- We should use it to deploy new changes
 
 -> We decided to use zest.releaser for releasing our buildouts
 
@@ -111,13 +110,13 @@ So we begin to think as DevOps enterprise and we start to create process to upda
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
 
-### How we transforms our buildout  <!-- .element: style="color:white; position: relative; top: -3em;" -->
+### How we transform a buildout  <!-- .element: style="color:white; position: relative; top: -3em;" -->
 
 - Add version.txt file
 - Add CHANGES.rst file
 
 
-And it's all, we can now make "fullrelease" of our buildout.
+And that's it, we can now make "fullrelease" of one buildout.
 
 [comment]: # (!!! data-auto-animate data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
@@ -233,7 +232,7 @@ Use to local dev with buildout, pip, mr.developer, direnv, pre-commit ...
 
 #### Staging
 
-When change are detected, staging instances should be automaticaly updated
+When changes are detected, staging instances should be automaticaly updated
 
 #### Production
 
@@ -244,7 +243,7 @@ Production instances should be updated with a human action
 
 ### Staging
 
-When a new commit is push to your buildout repo
+When a new commit is pushed to your buildout repo
 - New docker image is build
 - Tested
 - Automaticaly deploy
@@ -256,7 +255,7 @@ When a new commit is push to your buildout repo
 
 When a new tag is created, latest staging Docker image is copied to docker prod registry.
 
-So a human action is required to deploy to production and staging is automatically updated.
+A human action is required to deploy in production. In contrast to staging automatically updated.
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 ## Table of contents <!-- .element: style="color:white; position: relative; top: -2em;" -->
@@ -273,7 +272,7 @@ So a human action is required to deploy to production and staging is automatical
 
 ## How we do that: Jenkins
 
-We used Jenkins to scan all our buildout repo on our organization on Github
+We used Jenkins to scan all our buildouts repo on our organization on Github
 
 We build Jenkins pipeline for our CI/CD
 
@@ -370,8 +369,8 @@ stage('Deploy to staging') {
 
 ### Rundeck
 
-- Avoid ssh access to your server
-- Used job defined to make precise actions
+- Avoid ssh access to our servers
+- Use defined job to make precise actions
 - Restart instance one by one
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
@@ -415,7 +414,7 @@ stage('Deploy') {
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
 ### Puppet
-Puppet used to configure our server, it's a tool to make infrastructure automation
+Puppet is use to configure our servers, it's a tool to make infrastructure automation
 - create systemd files to start container (based on docker-compose)
 - create cron for backup, pack, ...
 - create Apache aliases
@@ -423,9 +422,11 @@ Puppet used to configure our server, it's a tool to make infrastructure automati
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
 
-All this process take a lot of iteration to get there,
+The whole process takes a lot of iterations, it works fine but there are still some improvements to do:
+- Detect the need of a new instance
+- Move instance to another server if the server is too charged
 
-but we should now improve all of this by migration to Kubernetes with a Helm chart
+The next step is a migration to Kubernetes with a Helm chart
 
 [comment]: # (!!! data-background-image="medias/background-presentation-imio.png" data-background-size="contain")
 
